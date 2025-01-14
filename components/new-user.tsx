@@ -66,7 +66,7 @@ export default function NewUser() {
       <div className="flex flex-col md:flex-row gap-6 w-full max-w-3xl">
         <Card className="flex-1">
           <CardHeader>
-            <CardTitle>I&apos;m an Employee</CardTitle>
+            <CardTitle>I&apos;m an Aplicant</CardTitle>
             <CardDescription>
               Find your dream job and advance your career
             </CardDescription>

@@ -140,7 +140,8 @@ export default function Page() {
             ) : (
               <Button
                 type="button"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
                   const currentIndex = tabs.findIndex(
                     (tab) => tab.value === activeTab
                   );

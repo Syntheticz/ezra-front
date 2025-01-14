@@ -37,8 +37,11 @@ export interface UserInputDefaultsWithRelations
 
 export interface JobCardProps {
   id: string;
-  title: string;
-  score: number;
-  location: string;
+  company_name: string;
+  company_address: string;
+  job_title: string;
+  industry_field: string;
   description: string;
+  qualifications: Array<{ requirement: string; categories: string[] }>;
+  score: number;
 }

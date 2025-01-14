@@ -33,7 +33,7 @@ export function JobRecommendations() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const filteredJobs = jobs.filter((job) =>
-    job.title.toLowerCase().includes(searchTerm.toLowerCase())
+    job.job_title.toLowerCase().includes(searchTerm.toLowerCase())
   );
   const { triggerToast } = useDynamicToast();
 
@@ -59,14 +59,24 @@ export function JobRecommendations() {
 
   useEffect(() => {
     if (!data) return;
+    console.log(data);
     setJobs(
       data
         .map((item) => ({
+          id: item.job.id,
+          company_name: item.job.companyName,
+          company_address: item.job.location || "",
+          job_title: item.job.jobTitle,
+          industry_field:
+            item.job.industryField.length === 0
+              ? ""
+              : item.job.industryField[0].name,
           description: item.job.description || "",
-          id: item.id,
-          location: item.job.location || "",
+          qualifications: item.job.qualifications.map((item) => ({
+            requirement: item.requirement,
+            categories: item.category.map((category) => category.name),
+          })),
           score: item.score,
-          title: item.job.jobTitle,
         }))
         .sort((a, b) => b.score - a.score)
     );

@@ -91,6 +91,7 @@ model Job {
   id          String   @id @default(uuid())
   jobTitle    String
   description String?
+  companyName String
   postedDate  DateTime
   location    String?
 
@@ -98,6 +99,16 @@ model Job {
   priorityCategories PriorityCategory[]
   qualifications     Qualification[]
   Score              Score[]
+  Employer           Employer           @relation(fields: [employerId], references: [id])
+  employerId         String             @unique
+}
+
+model Employer {
+  id            String  @id @default(uuid())
+  name          String?
+  email         String?
+  contactNumber String?
+  Job           Job?
 }
 
 model IndustryField {

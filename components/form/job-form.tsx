@@ -54,6 +54,9 @@ export default function JobForm() {
     defaultValues: {
       id: jobID,
       jobTitle: "",
+      companyName: "",
+      description: "",
+      location: "",
       industryField: [{ id: uuid(), name: "" }],
       qualifications: [
         {

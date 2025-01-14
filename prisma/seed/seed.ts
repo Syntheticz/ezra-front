@@ -20,7 +20,7 @@ async function seedCategories(categorues: string[]) {
 }
 
 async function seedJobs() {
-  const usersPath = path.join(process.cwd(), "/prisma/seed/sample.json");
+  const usersPath = path.join(process.cwd(), "/prisma/seed/dataset.json");
   const file = await fs.readFile(usersPath, "utf-8");
   const rawData = JSON.parse(file);
   const data = rawData.job_roles;
@@ -35,20 +35,28 @@ async function seedJobs() {
 
   for (let i = 0; i < data.length; i++) {
     const job = data[i];
-
     await prisma.$transaction(async (tx) => {
+      const employer = job.employer[0];
       const jobInfo = await prisma.job.create({
         data: {
           jobTitle: job.job_title,
           postedDate: new Date(Date.now()),
-          description: "",
+          companyName: job.company_name,
+          Employer: {
+            create: {
+              name: employer.name,
+              contactNumber: employer.contact,
+              email: employer.email,
+            },
+          },
+          description: job.description,
           industryField: {
             connectOrCreate: {
               where: { name: job.industry_field },
               create: { name: job.industry_field },
             },
           },
-          location: "",
+          location: job.company_address,
           priorityCategories: {
             createMany: {
               data: job.priority_categories.map((item: string) => ({
@@ -58,10 +66,12 @@ async function seedJobs() {
           },
         },
       });
+
       const qualifications = job.qualifications.map((qualification: any) => ({
         ...qualification,
         id: uuid(),
       }));
+
       const qualificationsData = await tx.qualification.createManyAndReturn({
         data: qualifications.map((qualification: any) => ({
           id: qualification.id,
@@ -79,7 +89,9 @@ async function seedJobs() {
           await tx.possibleCredential.create({
             data: {
               credential: credential || "",
-              qualificationId: qualification.id || "",
+              qualificationId:
+                qualificationsData.find((item) => item.id === qualification.id)
+                  ?.id || "",
             },
           });
         }

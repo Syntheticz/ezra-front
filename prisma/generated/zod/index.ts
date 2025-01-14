@@ -22,7 +22,9 @@ export const VerificationTokenScalarFieldEnumSchema = z.enum(['identifier','toke
 
 export const AuthenticatorScalarFieldEnumSchema = z.enum(['credentialID','userId','providerAccountId','credentialPublicKey','counter','credentialDeviceType','credentialBackedUp','transports']);
 
-export const JobScalarFieldEnumSchema = z.enum(['id','jobTitle','description','postedDate','location']);
+export const JobScalarFieldEnumSchema = z.enum(['id','jobTitle','description','companyName','postedDate','location','employerId']);
+
+export const EmployerScalarFieldEnumSchema = z.enum(['id','name','email','contactNumber']);
 
 export const IndustryFieldScalarFieldEnumSchema = z.enum(['id','name','jobId']);
 
@@ -195,8 +197,10 @@ export const JobSchema = z.object({
   id: z.string().uuid(),
   jobTitle: z.string(),
   description: z.string().nullable(),
+  companyName: z.string(),
   postedDate: z.coerce.date(),
   location: z.string().nullable(),
+  employerId: z.string(),
 })
 
 export type Job = z.infer<typeof JobSchema>
@@ -209,6 +213,28 @@ export const JobOptionalDefaultsSchema = JobSchema.merge(z.object({
 }))
 
 export type JobOptionalDefaults = z.infer<typeof JobOptionalDefaultsSchema>
+
+/////////////////////////////////////////
+// EMPLOYER SCHEMA
+/////////////////////////////////////////
+
+export const EmployerSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string().nullable(),
+  email: z.string().nullable(),
+  contactNumber: z.string().nullable(),
+})
+
+export type Employer = z.infer<typeof EmployerSchema>
+
+// EMPLOYER OPTIONAL DEFAULTS SCHEMA
+//------------------------------------------------------
+
+export const EmployerOptionalDefaultsSchema = EmployerSchema.merge(z.object({
+  id: z.string().uuid().optional(),
+}))
+
+export type EmployerOptionalDefaults = z.infer<typeof EmployerOptionalDefaultsSchema>
 
 /////////////////////////////////////////
 // INDUSTRY FIELD SCHEMA

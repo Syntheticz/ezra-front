@@ -14,7 +14,7 @@ async function fetchUserRole(id: string) {
       name: true,
       role: true,
       UserInput: {
-        select: { isVerified: true },
+        select: { isVerified: true, id: true },
       },
     },
   });
@@ -50,7 +50,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           token.name = dbUser.name || "";
           token.role = dbUser.role;
           token.isVerified = dbUser.UserInput?.isVerified || false;
-          token.hasData = dbUser.UserInput ? true : false;
+          token.hasData = dbUser.UserInput?.id ? true : false;
         }
 
         return token;

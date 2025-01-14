@@ -94,6 +94,9 @@ export async function fetchJobsFromScores(applicantId: string) {
         },
       },
     });
+
+    console.log(nonScoredJobs[0]);
+
     combinedJobs = nonScoredJobs.map((item) => ({
       job: item,
       score: 0,
@@ -183,11 +186,19 @@ export async function evaluateJobForApplicant(applicantId: string) {
 export async function createJobInformation(
   data: JobOptionalDefaultsWithRelations
 ) {
-  await prisma.$transaction(async (tx) => {
+  const session = await auth();
+  const test = await prisma.$transaction(async (tx) => {
     const job = await tx.job.create({
       data: {
         postedDate: new Date(Date.now()),
-
+        Employer: {
+          create: {
+            name: session?.user.name,
+            email: session?.user.email,
+            contactNumber: "",
+          },
+        },
+        companyName: data.companyName,
         jobTitle: data.jobTitle,
         industryField: {
           createMany: { data: data.industryField || [] },
@@ -230,7 +241,11 @@ export async function createJobInformation(
         });
       }
     }
+
+    return job;
   });
+
+  return test;
 }
 
 export async function getJobInformation() {
